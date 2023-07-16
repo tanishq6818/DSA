@@ -35,6 +35,58 @@
 // Every skill in people[i] is a skill in req_skills.
 // It is guaranteed a sufficient team exists.
 
+vector<int> smallestSufficientTeam(vector<string>& req_skills,
+                                       vector<vector<string>>& people) {
+        
+        int m = req_skills.size(), limit = (1 << m), n = people.size();
+
+        unordered_map<string, int> mp;        
+        for (int i = 0; i < m; ++i) {
+            mp[ req_skills[i] ] = i;
+        }
+        
+        vector<int> p_mask(n);
+        
+        for (int i = 0; i < n; ++i) {
+            
+            int mask = 0;
+            for (string & s : people[i]) {
+                mask |= (1 << mp[s]);
+            }
+            p_mask[i] = mask;
+        }
+        
+        vector<int> dp(limit, INT_MAX), parent(limit, -1), prev(limit);
+        dp[0] = 0;
+        
+        for (int mask = 0; mask < limit; ++mask) {
+            
+            if (dp[mask] == INT_MAX) {
+                continue;
+            }
+            
+            for (int i = 0; i < n; ++i) {
+                
+                int comb = mask | p_mask[i];
+                
+                if (dp[comb] > dp[mask] + 1) {
+                    dp[comb] = dp[mask] + 1;
+                    parent[comb] = i;
+                    prev[comb] = mask;
+                }
+            }
+        }
+        
+        int mask = limit - 1;
+        vector<int> result;
+        
+        while (parent[mask] != -1) {
+            result.emplace_back( parent[mask] );
+            mask = prev[mask];
+        }
+        return result;
+    }
+
 vector<int> smallestSufficientTeam(vector<string>& req_skills, vector<vector<string>>& people) {
         int n = people.size(), m = req_skills.size();
         unordered_map<string, int> skillId;
