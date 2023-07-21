@@ -20,39 +20,38 @@ class Solution
 {
 public:
     // Function to reverse a linked list in groups of size k
-    struct node *reverse(struct node *head, int k)
+    pair<struct node *,struct node *> helperReverse(struct node  *head,int k)
     {
-        if (head == NULL || k == 1)
-            return head;
-
-        struct node *dummy = new struct node(0);
-        dummy->next = head;
-        struct node *curr = dummy, *nex, *prev = dummy;
-        int count = 0;
-
-        // Get the total number of nodes in the linked list
-        while (curr->next != NULL)
+        struct node  *prev=NULL,*curr=head,*next=NULL;
+        while(curr && k)
         {
-            count++;
-            curr = curr->next;
+            next=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            k--;
         }
-
-        // Continue reversing the linked list in groups of k until no nodes are left
-        while (count >= k)
+        return {prev,curr};
+    }
+    struct node *reverse (struct node *head, int k)
+    { 
+        // Complete this method
+        struct node  *prev=NULL;
+        struct node  *ans;
+        int f=1;
+        int c=0;
+        while(head)
         {
-            curr = prev->next;
-            nex = curr->next;
-            for (int i = 1; i < k; i++)
-            {
-                curr->next = nex->next;
-                nex->next = prev->next;
-                prev->next = nex;
-                nex = curr->next;
-            }
-            prev = curr;
-            count -= k;
+            c++;
+            pair<struct node *,struct node *> t=helperReverse(head,k);
+            if(f)
+                ans=t.first;
+            f=0;
+            if(prev)
+                prev->next=t.first;
+            prev=head;
+            head=t.second;
         }
-
-        return dummy->next;
+        return ans;
     }
 };
