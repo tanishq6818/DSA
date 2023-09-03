@@ -91,7 +91,7 @@ public class Main
         }
         else{
             newstr+=ch;
-            moveallX(idx+!,str,newstr,count);
+            moveallX(idx+1,str,newstr,count);
         }
     }
 
@@ -113,6 +113,20 @@ public class Main
         
     }
 
+
+	//Important
+
+	 public static void subsequences(int idx,String str,String newstr){
+       if(idx==str.length()){
+           System.out.println(newstr);
+           return;
+       }
+       char ch=str.charAt(idx);
+       //Whether a char goes to the string at random : Case 1
+        subsequences(idx+1,str,newstr+ch);
+        //Whether a char dont want to go to the string at random : Case 2
+        subsequences(idx+1,str,newstr);
+   }
 	
 	public static void main(String[] args) {
 		int n=3;
