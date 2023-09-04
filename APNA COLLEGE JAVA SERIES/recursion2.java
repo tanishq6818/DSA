@@ -19,7 +19,7 @@ public class Main
 
 public static int Total_paths_in_a_matrix(int i,int j,int n,int m){
       if(i==n||j==m)    return 0;
-      if(i==n-1 && j==m-1)  return m-1;
+      if(i==n-1 && j==m-1)  return 1;
       int down=Total_paths_in_a_matrix(i+1,j,n,m);
       int right=Total_paths_in_a_matrix(i,j+1,n,m);
       return down+right;
