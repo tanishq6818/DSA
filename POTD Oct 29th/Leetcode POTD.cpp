@@ -41,7 +41,11 @@
 
 
 int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
-    int states = minutesToTest / minutesToDie + 1;
-    int pigs = ceil(log(buckets) / log(states));
+    int testsPerRound = minutesToTest / minutesToDie + 1;
+    int pigs = 0;
+    
+    while (pow(testsPerRound, pigs) < buckets) {
+        pigs++;
+    }
     return pigs;
-}
+    }
