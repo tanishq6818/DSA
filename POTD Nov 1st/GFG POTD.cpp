@@ -57,17 +57,17 @@
 // 1 ≤ P ≤ 4*104 
 // 1 <= arr[i] <= P
 
-void frequencyCount(vector<int>& arr, int N, int P) {
-    for (int i = 0; i < N; i++) {
-        // Decrement arr[i] by 1 to use it as an index.
-        int index = arr[i] - 1;
-
-        // Increment the frequency at the corresponding index.
-        arr[index] += P;
+void frequencyCount(vector<int>& arr,int N, int P)
+    { 
+        // code here
+        for(int i=0;i<N;i++){
+            if((arr[i]%(P+1))>N) continue;
+            int k = arr[i]%(P+1);
+            arr[k-1]+=(P+1);
+        }
+        for(int i=0;i<N;i++){
+            arr[i]=arr[i]/(P+1);
+        }
+        
+        
     }
-
-    for (int i = 0; i < N; i++) {
-        // Extract the frequency count at each index.
-        arr[i] = arr[i] / P;
-    }
-}
