@@ -55,19 +55,17 @@
 vector<int> sumTriangles(const vector<vector<int> >& matrix, int n) {
     int upperSum = 0;
     int lowerSum = 0;
-    
+
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (i <= j) {
-                // Upper triangular region (including the diagonal)
-                upperSum += matrix[i][j];
-            }
-            if (i >= j) {
-                // Lower triangular region (including the diagonal)
-                lowerSum += matrix[i][j];
-            }
+        upperSum += matrix[i][i]; // Diagonal element
+        lowerSum += matrix[i][i]; // Diagonal element
+        for (int j = i + 1; j < n; j++) {
+            upperSum += matrix[i][j]; // Upper triangle
+        }
+        for (int j = 0; j < i; j++) {
+            lowerSum += matrix[i][j]; // Lower triangle
         }
     }
-    
+
     return {upperSum, lowerSum};
 }
