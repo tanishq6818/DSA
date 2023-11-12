@@ -1,0 +1,81 @@
+You are given an array routes representing bus routes where routes[i] is a bus route that the ith bus repeats forever.
+
+For example, if routes[0] = [1, 5, 7], this means that the 0th bus travels in the sequence 1 -> 5 -> 7 -> 1 -> 5 -> 7 -> 1 -> ... forever.
+You will start at the bus stop source (You are not on any bus initially), and you want to go to the bus stop target. You can travel between bus stops by buses only.
+
+Return the least number of buses you must take to travel from source to target. Return -1 if it is not possible.
+
+ 
+
+Example 1:
+
+Input: routes = [[1,2,7],[3,6,7]], source = 1, target = 6
+Output: 2
+Explanation: The best strategy is take the first bus to the bus stop 7, then take the second bus to the bus stop 6.
+Example 2:
+
+Input: routes = [[7,12],[4,5,15],[6],[15,19],[9,12,13]], source = 15, target = 12
+Output: -1
+ 
+
+Constraints:
+
+1 <= routes.length <= 500.
+1 <= routes[i].length <= 105
+All the values of routes[i] are unique.
+sum(routes[i].length) <= 105
+0 <= routes[i][j] < 106
+0 <= source, target < 106
+  
+class Solution {
+public:
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        if (source == target) {
+            return 0;
+        }
+
+        unordered_map<int, vector<int>> adjList;
+        // Create a map from the bus stop to all the routes that include this stop.
+        for (int route = 0; route < routes.size(); route++) {
+            for (auto stop : routes[route]) {
+                // Add all the routes that have this stop.
+                adjList[stop].push_back(route);
+            }
+        }
+
+        queue<int> q;
+        unordered_set<int> vis;
+        // Insert all the routes in the queue that have the source stop.
+        for (auto route : adjList[source]){
+            q.push(route);
+            vis.insert(route);
+        }
+
+        int busCount = 1;
+        while (q.size()) {
+            int size = q.size();
+
+            for (int i = 0; i < size; i++) {
+                int route = q.front(); q.pop();
+
+                // Iterate over the stops in the current route.
+                for (auto stop: routes[route]) {
+                    // Return the current count if the target is found.
+                    if (stop == target) {
+                        return busCount;
+                    }
+
+                    // Iterate over the next possible routes from the current stop.
+                    for (auto nextRoute : adjList[stop]) {
+                        if (!vis.count(nextRoute)) {
+                            vis.insert(nextRoute);
+                            q.push(nextRoute);
+                        }
+                    }
+                }
+            }
+            busCount++;
+        }
+        return -1;
+    }
+};
