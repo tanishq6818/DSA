@@ -26,28 +26,43 @@
 // Constraints:
 // 1<= |X|, |Y| <= 100
 
-int shortestCommonSupersequence(string X, string Y, int m, int n)
-{
-    // Create a dp array to store the length of the shortest common supersequence
-    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
-
-    // Fill the dp array
-    for (int i = 0; i <= m; i++) {
-        for (int j = 0; j <= n; j++) {
-            // If one of the strings is empty, the length of the supersequence is the length of the other string
-            if (i == 0)
-                dp[i][j] = j;
-            else if (j == 0)
-                dp[i][j] = i;
-            // If the last characters of both strings match, reduce the problem to the subproblem without these characters
-            else if (X[i - 1] == Y[j - 1])
-                dp[i][j] = 1 + dp[i - 1][j - 1];
-            // If the last characters are different, consider both options and choose the minimum
-            else
-                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1]);
+class Solution{
+    public:
+    //Function to find the length of longest common subsequence in two strings.
+    int lcs(int x, int y, string s1, string s2){
+        //using dp[][] array to store length of LCS.
+        int dp[1001][1001];
+        
+        //Following steps build dp[x+1][y+1] in bottom up fashion. Note that 
+        //dp[i][j] contains length of LCS of s1[0..i-1] and s2[0..j-1].
+        for(int i=0;i<=x;i++)
+        {
+            for(int j=0;j<=y;j++)
+            {
+                //if i or j is 0, we mark dp[i][j] as 0.
+                if(i==0||j==0)
+                dp[i][j]=0;     
+                
+                //else if the current char in both strings are equal, we add 1 
+                //to the output we got without including these both characters.
+                else if (s1[i-1] == s2[j-1])        
+                dp[i][j] = dp[i-1][j-1] + 1; 
+                
+                //else s1[i-1]!=s2[j-1] so we check the max output which 
+                //comes from s1 or s2 without considering current character.
+                else
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1]); 
+            }
         }
+        
+        //returning the result.
+        return dp[x][y];   
     }
-
-    // The length of the shortest common supersequence is the sum of the lengths of X and Y minus the length of their common subsequence
-    return m + n - dp[m][n];
-}
+    
+    //Function to find length of shortest common supersequence of two strings.
+    int shortestCommonSupersequence(string X, string Y, int m, int n){
+        // Length of the shortest supersequence  = 
+        // (Sum of lengths of given two strings) - (Length of LCS of two given strings)
+        return ( m + n - lcs(m, n, X, Y) );
+    }
+};
