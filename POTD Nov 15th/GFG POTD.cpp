@@ -21,34 +21,43 @@
 // Constraints:
 // 1 <= str1.lenght , str2.length <= 30
 
-string betterString(string str1, string str2) {
-    int mod = 1e9 + 7;
-    
-    int m = str1.length();
-    int n = str2.length();
-    
-    // dp[i][j] represents the count of distinct subsequences of str1.substr(0, i) and str2.substr(0, j)
-    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
-    
-    for (int i = 0; i <= m; i++) {
-        for (int j = 0; j <= n; j++) {
-            if (i == 0 || j == 0) {
-                // Empty string has one subsequence, which is an empty string itself.
-                dp[i][j] = 1;
-            } else if (str1[i - 1] == str2[j - 1]) {
-                // If the current characters are the same, we have two choices:
-                // 1. Include the current characters in the subsequence, which is dp[i-1][j-1]
-                // 2. Exclude either of the current characters and take the count from the previous row or column
-                dp[i][j] = (dp[i-1][j] + dp[i][j-1] + 1) % mod;
-            } else {
-                // If the current characters are different, we can simply choose to exclude one of them
-                dp[i][j] = (dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1] + mod) % mod;
-            }
+class Solution {
+  public:
+    int countSub(string str) {
+        // Create an array to store index
+        // of last
+        vector<int> last(256, -1);
+
+        // Length of input string
+        int n = str.length();
+
+        // dp[i] is going to store count of distinct
+        // subsequences of length i.
+        int dp[n + 1];
+
+        // Empty substring has only one subsequence
+        dp[0] = 1;
+
+        // Traverse through all lengths from 1 to n.
+        for (int i = 1; i <= n; i++) {
+            // Number of subsequences with substring
+            // str[0..i-1]
+            dp[i] = 2 * dp[i - 1];
+
+            // If current character has appeared
+            // before, then remove all subsequences
+            // ending with previous occurrence.
+            if (last[str[i - 1]] != -1) dp[i] = dp[i] - dp[last[str[i - 1]]];
+
+            // Mark occurrence of current character
+            last[str[i - 1]] = (i - 1);
         }
+
+        return dp[n];
     }
-    
-    // The result is the count of distinct subsequences of the entire strings.
-    int result = dp[m][n];
-    
-    return (result > 0) ? str1 : str2;
-}
+    string betterString(string str1, string str2) {
+        int a = countSub(str1), b = countSub(str2);
+        if (a < b) return str2;
+        return str1;
+    }
+};
