@@ -28,43 +28,56 @@
 // 1 <= size of linked lists <= 5000
 // 1 <= Data in linked list nodes <= 104
 
+struct Node
+{
+    int data;
+    Node *next;
+    Node(int val)
+    {
+        data=val;
+        next=NULL;
+    }
+};
+
+*/
+
 class Solution
 {
-public:
+    public:
     Node* findIntersection(Node* head1, Node* head2)
     {
-        unordered_set<int> uniqueValues;
-        Node* resultHead = nullptr;
-        Node* resultTail = nullptr;
-
-        // Traverse the first linked list and store unique values in the set
-        while (head1 != nullptr)
-        {
-            uniqueValues.insert(head1->data);
-            head1 = head1->next;
-        }
-
-        // Traverse the second linked list
-        while (head2 != nullptr)
-        {
-            // If the value is present in the set, add it to the result linked list
-            if (uniqueValues.find(head2->data) != uniqueValues.end())
+        Node *p1=head1, *p2=head2;
+        Node *head=NULL, *tail=NULL;
+        
+        while(p1 && p2)
+            if(p1->data > p2->data)
+                // nodes dont match
+                // moving to next node in list with smaller node
+                p2 = p2->next;
+            
+            else if(p2->data > p1->data)
+                // nodes dont match
+                // moving to next node in list with smaller node
+                p1 = p1->next;
+            
+            else
             {
-                Node* newNode = new Node(head2->data);
-                if (resultHead == nullptr)
-                {
-                    resultHead = newNode;
-                    resultTail = newNode;
-                }
+                // nodes match
+                
+                if(head==NULL)
+                    head = tail = new Node(p1->data);
+                    // creating new head for intersection list
                 else
                 {
-                    resultTail->next = newNode;
-                    resultTail = newNode;
+                    // appending new node at the end
+                    tail->next = new Node(p1->data);
+                    tail = tail->next;
                 }
+                p1 = p1->next;
+                p2 = p2->next;
+                // moving to next nodes in both lists
             }
-            head2 = head2->next;
-        }
-
-        return resultHead;
+        
+        return head;
     }
 };
