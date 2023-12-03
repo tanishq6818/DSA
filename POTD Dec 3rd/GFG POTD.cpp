@@ -48,68 +48,43 @@
 
 // Constraints:
 // 1 ≤ Number of nodes ≤ 105
-// 1 ≤ Data of a node ≤ 106
 
 
-class Solution
-{
+class Solution {
 public:
-    // Helper function to perform inorder traversal and store the nodes in a stack
-    void inorderTraversal(Node* root, stack<Node*>& st, bool reverseOrder)
-    {
-        if (!root)
-            return;
+    int pairCount = 0;
 
-        if (reverseOrder)
-        {
-            inorderTraversal(root->right, st, reverseOrder);
-            st.push(root);
-            inorderTraversal(root->left, st, reverseOrder);
+    void findPairs(Node* root2, int diff)
+    {
+        if (root2 == NULL) {
+            return;
         }
-        else
-        {
-            inorderTraversal(root->left, st, reverseOrder);
-            st.push(root);
-            inorderTraversal(root->right, st, reverseOrder);
+        if (diff > root2->data) {
+            findPairs(root2->right, diff);
         }
+        else {
+            findPairs(root2->left, diff);
+        }
+        if (root2->data == diff) {
+            pairCount++;
+        }
+    }
+
+    void traverseTree(Node* root1, Node* root2, int sum)
+    {
+        if (root1 == NULL || root2 == NULL) {
+            return;
+        }
+        traverseTree(root1->left, root2, sum);
+        traverseTree(root1->right, root2, sum);
+        int diff = sum - root1->data;
+        findPairs(root2, diff);
     }
 
     int countPairs(Node* root1, Node* root2, int x)
     {
-        // Stack to store nodes of BSTs during traversal
-        stack<Node*> stack1, stack2;
 
-        // Initialize inorder traversal stacks
-        inorderTraversal(root1, stack1, false);
-        inorderTraversal(root2, stack2, true);
-
-        int count = 0;
-
-        // Process pairs using stacks
-        while (!stack1.empty() && !stack2.empty())
-        {
-            int sum = stack1.top()->data + stack2.top()->data;
-
-            if (sum == x)
-            {
-                count++;
-                stack1.pop();
-                stack2.pop();
-            }
-            else if (sum < x)
-            {
-                // Move to the next greater element in stack1
-                stack1.pop();
-                inorderTraversal(stack1.top()->right, stack1, false);
-            }
-            else
-            {
-                // Move to the next smaller element in stack2
-                stack2.pop();
-                inorderTraversal(stack2.top()->left, stack2, true);
-            }
-        }
-
-        return count;
+        traverseTree(root1, root2, x);
+        return pairCount;
     }
 };
