@@ -104,3 +104,37 @@ int missing(int n,int arr[]){
     }
     return res;
 }
+
+
+
+//Two odd occurring elements
+
+void twoodd(int n,int arr[]){
+    int xorw=0,x,y;
+    for(int i=0;i<n;i++){
+        xorw^=arr[i];
+    }
+    int st=xorw & ~(xorw-1);
+    for(int i=0;i<n;i++){
+        if(st & arr[i] != 0){
+            x=x^arr[i];
+        }
+        else{
+            y^=arr[i];
+        }
+    }
+}
+
+//PowerSet using Bit
+void powerset(string str){
+    int n=str.length();
+    int powersize=pow(2,n);
+    for(int counter=0; counter<powersize;counter++){
+        for(int j=0;j<n;j++){
+            if(counter & (1<<(j)) != 0){
+                cout<<str[i]<<" ";
+            }
+        }
+        cout<<endl;
+    }
+}
