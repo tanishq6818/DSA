@@ -69,3 +69,55 @@ void primefactors3(int n){                    //Best Optimization
         cout<<n<<" ";
     }
 }
+
+
+
+//SIEVE OF ERATOSTHENES
+
+void SOE(int n){
+    //To print all prime numbers less than n
+    //By replacing the value of non prime numbers as false using its multiples
+    vector<bool> isPrime(n+1,true);
+    for(int i=2;i*i<=n;i++){
+        if(isPrime[i]){
+            for(int j=2*i;j<=n;j+=i){
+                isPrime[j]=false;
+            }
+        }
+    }
+    for(int i=2;i<=n;i++){
+        if(isPrime[i]){
+            cout<<i<<" ";
+            }
+        }
+    }
+}
+
+void SOE2(int n){
+    vector<bool> isPrime(n+1,true);
+    for(int i=2;i*i<=n;i++){
+        if(isPrime[i]){
+            for(int j=i*i;j<=n;j+=i){           //Further Optimization
+                isPrime[j]=false;
+            }
+        }
+    }
+    for(int i=2;i<=n;i++){
+        if(isPrime[i]){
+            cout<<i<<" ";
+            }
+        }
+    }
+}
+
+void SOE3(int n){                                //Best optimization with shorter length
+    vector<bool> isPrime(n+1,true);
+    for(int i=2;i<=n;i++){
+        if(isPrime[i]){
+            cout<<i<<" ";
+            for(int j=i*i;j<=n;j+=i){
+                isPrime[i]=false;
+            }
+        }
+    }
+}
