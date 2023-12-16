@@ -28,18 +28,7 @@
 // Constraints:
 // 1 ≤ n ≤ 105
 
-long long int countStr(long long int n) {
-    // Total strings with a, b, and c
-    long long totalStrings = pow(3, n);
-
-    // Number of strings with more than one 'b'
-    long long stringsWithMoreThanOneB = pow(2, n);
-
-    // Number of strings with more than two 'c'
-    long long stringsWithMoreThanTwoC = pow(2, n) + n * pow(2, n - 1);
-
-    // Subtract the invalid strings from the total to get the valid strings
-    long long validStrings = totalStrings - (stringsWithMoreThanOneB + stringsWithMoreThanTwoC);
-
-    return validStrings;
-}
+long long int countStr(long long int n) { 
+    long long ans = 1+(n*2)+(n*((n*n)-1)/2);
+    return ans; 
+} 
