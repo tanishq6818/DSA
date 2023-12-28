@@ -66,3 +66,13 @@ int getLengthOfOptimalCompression(string s, int k) {
 
     return dp[i][k];
   }
+int getLength(int maxFreq) {
+    if (maxFreq == 1)
+      return 1;  // c
+    if (maxFreq < 10)
+      return 2;  // [1-9]c
+    if (maxFreq < 100)
+      return 3;  // [1-9][0-9]c
+    return 4;    // [1-9][0-9][0-9]c
+  }
+                                                                                                                                                                                                                                                                    };
