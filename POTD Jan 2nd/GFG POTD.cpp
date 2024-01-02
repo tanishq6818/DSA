@@ -33,25 +33,43 @@ Constraints:
 1 <= k <= n
 
 
-  #define ll long long
+// Returns maximum sum of a subarray with at-least
+// k elements.
 class Solution{
-    public:    
-    long long int maxSumWithK(long long int arr[], long long int n, long long int k) 
-    {
-        ll ans = INT_MIN;
-        for(ll i=0; i<n; i++)
-        {
-            ll count = -1, curr = 0;
-            
-            for(int j=i; j<n; j++)
-            {
-                count++;
-                curr += arr[j];
-                
-                if(count >= k-1)
-                ans = max(curr, ans);
-            }
+    public:
+    long long int maxSumWithK(long long int a[], long long int n, long long int k) {
+        // maxSum[i] is going to store maximum sum
+        // till index i.
+        long long int maxSum[n];
+        maxSum[0] = a[0];
+    
+        // We use Kadane's algorithm to fill maxSum[]
+        // Below code is taken from method 3 of
+        // http://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
+        long long int curr_max = a[0];
+        for (long long int i = 1; i < n; i++) {
+            curr_max = max(a[i], curr_max + a[i]);
+            maxSum[i] = curr_max;
         }
-        return ans;
+    
+        // Sum of first k elements
+        long long int sum = 0;
+        for (long long int i = 0; i < k; i++) sum += a[i];
+    
+        // Use the concept of sliding window
+        long long int result = sum;
+        for (long long int i = k; i < n; i++) {
+            // Compute sum of k elements ending
+            // with a[i].
+            sum = sum + a[i] - a[i - k];
+    
+            // Update result if required
+            result = max(result, sum);
+    
+            // Include maximum sum till [i-k] also
+            // if it increases overall max.
+            result = max(result, sum + maxSum[i - k]);
+        }
+        return result;
     }
 };
