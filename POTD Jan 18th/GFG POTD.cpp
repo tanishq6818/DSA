@@ -46,39 +46,70 @@
 // gallery[i] ≤ 50
 
 
-int min_sprinklers(int gallery[], int n) {
-    // Create a vector of pairs to store start and end points of effective ranges
-    vector<pair<int, int>> sprinklerRanges;
 
-    // Fill the vector with start and end points of effective ranges
-    for (int i = 0; i < n; ++i) {
-        if (gallery[i] != -1) {
-            sprinklerRanges.push_back({max(0, i - gallery[i]), min(n - 1, i + gallery[i])});
+class Solution{
+    public:
+    //Function to find the minimum number of sprinklers required.
+    int min_sprinklers(int gallery[], int n)
+    {
+        //creating a vector of pairs to store the range of each sprinkler.
+        vector<pair<int,int>> sprinklers;
+        
+        //iterating over the gallery array.
+        for(int i=0; i<n; i++)
+        {
+            //checking if the gallery at current index is not -1.
+            if(gallery[i] > -1)
+            {
+                //adding the range of each sprinkler to the vector.
+                sprinklers.push_back( pair<int,int> ( i-gallery[i], i+gallery[i] ) );
+            }
         }
+        
+        //sorting the sprinklers based on their starting range.
+        sort(sprinklers.begin(), sprinklers.end());
+        
+        //initializing target, sprinklers_on, and i.
+        int target=0, sprinklers_on=0, i=0;
+        
+        //looping until target is less than n.
+        while(target<n)
+        {
+            //checking if i has reached the end of the sprinklers vector
+            //or the starting range of next sprinkler is greater than the target.
+            if(i==sprinklers.size() || sprinklers[i].first>target)
+            {
+                //returning -1 if above condition is true.
+                return -1;
+            }
+            
+            //initializing max_range with the ending range of current sprinkler.
+            int max_range = sprinklers[i].second;
+            
+            //looping until i+1 is within the range of sprinklers vector
+            //and the starting range of next sprinkler is less than or equal to target.
+            while( i+1<sprinklers.size() && sprinklers[i+1].first<=target )
+            {
+                //updating i and max_range if above condition is true.
+                i++;
+                max_range = max( max_range,  sprinklers[i].second );
+            }
+            
+            //checking if the maximum range is less than target
+            //which means no sprinkle can cover the current target point.
+            if(max_range<target)
+            {
+                //returning -1 if above condition is true.
+                return -1;
+            }
+            
+            //incrementing the count of sprinklers and updating target and i.
+            sprinklers_on++;
+            target = max_range +1;
+            i++;
+        }
+        
+        //returning the minimum number of sprinklers required.
+        return sprinklers_on;
     }
-
-    // Sort the vector based on start points
-    sort(sprinklerRanges.begin(), sprinklerRanges.end());
-
-    int start = 0, end = 0, sprinklerCount = 0;
-
-    // Iterate through the sorted vector and update the effective range
-    for (int i = 0; i < sprinklerRanges.size(); ++i) {
-        if (sprinklerRanges[i].first > end) {
-            return -1; // Cannot cover the entire gallery
-        }
-
-        end = max(end, sprinklerRanges[i].second);
-
-        if (end >= n - 1) {
-            return sprinklerCount + 1; // All plants are covered
-        }
-
-        if (sprinklerRanges[i].first > start) {
-            start = end;
-            sprinklerCount++;
-        }
-    }
-
-    return -1; // If the end pointer did not reach the end of the gallery
-}
+};
