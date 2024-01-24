@@ -30,39 +30,43 @@
 // 1 <= N <= 2*105
 // 0 <= M <= 2*105
 
- bool dfs(int i,int parent,vector<int>&visited,vector<int>adj[]){
-        visited[i]=1;
+class Solution {
+  public:
+    int isTree(int n, int m, vector<vector<int>> &edges) 
+    {
+        if(m!=n-1)
+            return false;
+            
+        vector<bool>vis(n,false);
+        vector<int>adj[n];
         
-        for(auto it:adj[i]){
-            if(!visited[it]){
-                if(dfs(it,i,visited,adj)==true) return true;
-            }else{
-                if(parent!=it){
-                    return true;
+        for(int i=0;i<edges.size();i++)
+        {
+            adj[edges[i][0]].push_back(edges[i][1]);
+            adj[edges[i][1]].push_back(edges[i][0]);
+        }
+        
+        int node=0;
+        queue<int>q;
+    
+        vis[node]=true;
+        int visited=1;
+        q.push(node);
+        
+        while(q.size())
+        {
+            int curr=q.front();
+            q.pop();
+            for(auto it:adj[curr])
+            {
+                if(!vis[it])
+                {
+                    vis[it]=true;
+                    visited++;
+                    q.push(it);
                 }
             }
         }
-        
-        return false;
+        return (visited==n);
     }
-    int isTree(int n, int m, vector<vector<int>> &adj) {
-        vector<int>adz[n];
-        for(int i=0;i<m;i++){
-            int u=adj[i][0];
-            int v=adj[i][1];
-            
-            adz[u].push_back(v);
-            adz[v].push_back(u);
-        }
-        
-        vector<int>visited(n,0);
-        
-        for(int i=0;i<n;i++){
-            if(!visited[i]){
-                if(dfs(i,-1,visited,adz)==true) return 0;
-            }
-        }
-        
-        
-        return 1;
-    }
+};
