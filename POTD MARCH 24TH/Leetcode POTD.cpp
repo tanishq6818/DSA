@@ -32,20 +32,25 @@ Follow up:
 
 How can we prove that at least one duplicate number must exist in nums?
 Can you solve the problem in linear runtime complexity?
-
 int findDuplicate(vector<int>& nums) {
-    int n = nums.size();
-    int result = 0;
+    // Initialize the slow and fast pointers
+    int slow = nums[0];
+    int fast = nums[0];
 
-    // XOR all numbers from 1 to n
-    for (int i = 1; i <= n - 1; ++i) {
-        result ^= i;
+    // Move slow one step and fast two steps until they meet
+    do {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
+
+    // Reset slow to the start and move both pointers one step at a time
+    // until they meet again, which will be the duplicate element
+    slow = nums[0];
+    while (slow != fast) {
+        slow = nums[slow];
+        fast = nums[fast];
     }
 
-    // XOR all elements in the array
-    for (int num : nums) {
-        result ^= num;
-    }
-
-    return result;
+    return slow;
 }
+
