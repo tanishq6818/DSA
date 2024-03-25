@@ -24,19 +24,21 @@ n == nums.length
 1 <= n <= 105
 1 <= nums[i] <= n
 Each element in nums appears once or twice.
-
-  vector<int> findDuplicates(vector<int>& nums) {
+vector<int> findDuplicates(vector<int>& nums) {
     vector<int> duplicates;
 
     for (int i = 0; i < nums.size(); ++i) {
-        // Continue swapping until the current element is in its correct position
-        while (nums[i] != i + 1 && nums[nums[i] - 1] != nums[i]) {
-            swap(nums[i], nums[nums[i] - 1]);
+        int index = abs(nums[i]) - 1;
+        if (nums[index] < 0) {
+            duplicates.push_back(abs(nums[i]));
+        } else {
+            nums[index] = -nums[index];
         }
-        // Check if the current element is a duplicate
-        if (nums[i] != i + 1 && nums[nums[i] - 1] == nums[i]) {
-            duplicates.push_back(nums[i]);
-        }
+    }
+
+    // Restore the original array for future use
+    for (int i = 0; i < nums.size(); ++i) {
+        nums[i] = abs(nums[i]);
     }
 
     return duplicates;
