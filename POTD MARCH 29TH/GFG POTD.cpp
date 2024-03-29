@@ -1,0 +1,90 @@
+Eulerian Path is a path in a graph that visits every edge exactly once. Eulerian Circuit is an Eulerian Path that starts and ends on the same vertex. Given the number of vertices v and adjacency list adj denoting the graph. Find that there exists the Euler circuit or not. Return 1 if there exist  alteast one eulerian path else 0.
+
+Example 1:
+
+Input: 
+v = 4 
+edges[] = {{0, 1}, 
+           {0, 2}, 
+           {1, 3}, 
+           {2, 3}}
+
+Output: 
+1
+Explanation: corresponding adjacency list will be {{1, 2},{0, 3},{0, 3},{1, 2}}
+One of the Eularian circuit 
+starting from vertex 0 is as follows:
+0->1->3->2->0
+Example 2:
+
+Input: 
+v = 3
+edges[] = {{0, 1}, 
+         {0, 2}}
+         
+
+Output: 
+0
+Explanation: corresponding adjacency list will be {{1, 2}}
+No Eulerian path is found.
+Your Task:
+You don't need to read or print anything. Your task is to complete the function isEularCircuitExist() which takes v and adjacency list adj[] as input parameter and returns boolean value 1 if Eular circuit exists otherwise returns 0.
+
+Expected Time Complexity: O(v + e)
+Expected Space Complexity: O(v)
+
+Constraints:
+1 <= v <= 105
+1 <= edges <= 2*105
+
+  void dfs(int v, vector<bool>& visited, vector<int> adj[]) {
+    visited[v] = true;
+    for (int i : adj[v]) {
+        if (!visited[i]) dfs(i, visited, adj);
+    }
+}
+
+// Helper function to check if the graph is connected excluding isolated vertices
+bool isConnected(int v, vector<int> adj[], vector<bool>& visited) {
+    // Find a vertex with non-zero degree
+    int nonZeroDegreeVertex = -1;
+    for (int i = 0; i < v; ++i) {
+        if (adj[i].size() > 0) {
+            nonZeroDegreeVertex = i;
+            break;
+        }
+    }
+    
+    // If there are no edges in the graph, it's considered connected
+    if (nonZeroDegreeVertex == -1) return true;
+
+    // Reset visited status for connectivity check
+    fill(visited.begin(), visited.end(), false);
+
+    // Perform DFS from a vertex with non-zero degree
+    dfs(nonZeroDegreeVertex, visited, adj);
+    
+    // Check if all vertices with non-zero degree are visited
+    for (int i = 0; i < v; ++i) {
+        if (!visited[i] && adj[i].size() > 0) return false;
+    }
+    return true;
+}
+
+bool isEularCircuitExist(int v, vector<int> adj[]) {
+    vector<bool> visited(v, false);
+    
+    // Check if the graph is connected
+    if (!isConnected(v, adj, visited)) return 0;
+    
+    // Count vertices with odd degree
+    int oddDegreeVertices = 0;
+    for (int i = 0; i < v; ++i) {
+        if (adj[i].size() & 1) { // Check if the degree is odd
+            oddDegreeVertices++;
+        }
+    }
+    
+    // If the number of vertices with odd degree is 0, Eulerian circuit exists
+    return oddDegreeVertices == 0 ? 1 : 0;
+}
