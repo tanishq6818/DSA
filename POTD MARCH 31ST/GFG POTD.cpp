@@ -31,7 +31,7 @@ Constraints:
 1 <= elements of the BST <= 103
 All nodes are unique in the BST
 
-int findMaxForN(TreeNode* root, int n) {
+int findMaxForN(Node* root, int n) {
     if (root == nullptr)
         return -1;
     
@@ -40,8 +40,8 @@ int findMaxForN(TreeNode* root, int n) {
     // Traverse the BST
     while (root != nullptr) {
         // If current node's value is less than or equal to n, update result and move to the right subtree
-        if (root->val <= n) {
-            result = root->val;
+        if (root->key <= n) {
+            result = root->key;
             root = root->right;
         } 
         // If current node's value is greater than n, move to the left subtree
