@@ -30,7 +30,7 @@ s consists of only English letters and spaces ' '.
 There will be at least one word in s.
 
 
-  int lengthOfLastWord(string s) {
+int lengthOfLastWord(string s) {
     int length = 0;
     int i = s.length() - 1;
 
@@ -38,7 +38,7 @@ There will be at least one word in s.
     while (i >= 0 && s[i] == ' ')
         i--;
 
-    // Count characters until space or beginning of string
+    // Count characters of the last word
     while (i >= 0 && s[i] != ' ') {
         length++;
         i--;
