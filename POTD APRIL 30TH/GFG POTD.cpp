@@ -33,32 +33,77 @@ Expected Time Complexity: O(n+m)
 Expected Auxiliary Space: O(max(n,m)) for the resultant list.
 
 Constraints:
-1 <= n, m <= 104class Solution {
-public:
-    // Function to add two numbers represented by linked list.
-    Node* addTwoLists(Node* num1, Node* num2) {
-        Node* resultHead = new Node(0); // Dummy head node for the result list
-        Node* current = resultHead; // Pointer to traverse the result list
-        int carry = 0; // Carry for addition
-
-        while (num1 || num2 || carry) {
-            int sum = carry;
-            if (num1) {
-                sum += num1->data;
-                num1 = num1->next;
-            }
-            if (num2) {
-                sum += num2->data;
-                num2 = num2->next;
-            }
-            carry = sum / 10; // Calculate the carry
-            sum %= 10; // Calculate the digit to be added to the result
-
-            // Create a new node with the calculated digit and add it to the result list
-            current->next = new Node(sum);
-            current = current->next;
+1 <= n, m <= 104
+    class Solution
+{
+    public:
+    //Function to reverse the linked list.
+    Node* reverse(Node *head) 
+    {
+        Node * prev = NULL;
+        Node * current = head;
+        Node * next;
+        
+        while (current != NULL) 
+        { 
+            next = current->next;     
+            current->next = prev;     
+            prev = current;          
+            current = next;
         }
-
-        return resultHead->next; // Return the head of the result list (skipping the dummy head node)
+        
+        return prev; 
+    }
+    public:
+    //Function to add two numbers represented by linked list.
+    struct Node* addTwoLists(struct Node* num1, struct Node* num2)
+    {
+        //reversing both lists to simplify addition.
+        num1 = reverse(num1);             
+        num2 = reverse(num2);            
+        
+        Node *sum=NULL;
+        int carry=0;
+        
+        //using a loop till both lists and carry gets exhausted.
+        while( num1!=NULL || num2!=NULL || carry!=0 )
+        {
+            //using a variable to store sum of two digits along with carry.
+            int newVal = carry;
+            
+            //if nodes are left in any list, we add their data in newVal.
+            if(num1) newVal += num1->data;
+            if(num2) newVal += num2->data;
+        
+            //updating carry.
+            carry = newVal/10;
+            
+            //using modulus to store only a single digit at that place.
+            newVal = newVal%10;             
+            
+            //creating new node which gets connected with other nodes that 
+            //we get after calculating sum of respective digits.
+            Node* newNode = new Node(newVal);
+            
+            //storing the previously made nodes in the link part of new node.
+            newNode->next = sum;
+            
+            //making the new node as the num1 node of all previously made node.
+            sum = newNode;
+            
+            //moving ahead in both lists.
+            if(num1) num1 = num1->next; 
+            if(num2) num2 = num2->next;
+        }
+        while(sum != NULL && sum->data==0)
+        {
+            Node *temp=sum->next;
+            sum->next=NULL;
+            delete(sum);
+            sum=temp;
+        }
+        if(sum==NULL)
+            return new Node(0);
+        return sum;
     }
 };
