@@ -51,3 +51,18 @@ Constraints:
 
         return maxi;
     }
+
+long long max_Books(int a[], int n, int k) {
+        long long ans = 0;
+        int count = 0;
+        long long fin = 0;
+        for (int i = 0; i < n; i++) {
+            if (a[i] <= k)
+                ans += a[i];
+            else
+                ans = 0;
+
+            fin = max(fin, ans);
+        }
+        return fin;
+    }
